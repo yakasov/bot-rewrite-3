@@ -9,12 +9,12 @@ import yt_dlp
 
 
 class Audio(commands.Cog):
-    """Class to hold all generic commands."""
+    """Class to hold all audio commands."""
     def __init__(self, bot):
         self.bot = bot
 
 
-    @commands.command(name="joinvc")
+    @commands.command(name="joinvc", aliases=["join, summon, connect"])
     async def join_author_vc(self, ctx):
         """Join voice channel of message author."""
         try:
@@ -25,7 +25,7 @@ class Audio(commands.Cog):
             pass
 
 
-    @commands.command(name="leavevc")
+    @commands.command(name="leavevc", aliases=["leave, disconnect"])
     async def leave_vc(self, ctx):
         """Leave current voice channel."""
         try:
@@ -34,7 +34,7 @@ class Audio(commands.Cog):
             pass
 
 
-    @commands.command(name="sing")
+    @commands.command(name="sing", aliases=["play, stream"])
     async def sing_yt(self, ctx, *, url: str):
         """Played audio from YouTube given URL."""
         ydl_options = {
@@ -77,5 +77,5 @@ class Audio(commands.Cog):
 
 
 def setup(bot):
-    """Add generic commands to bot."""
+    """Add audio commands to bot."""
     bot.add_cog(Audio(bot))

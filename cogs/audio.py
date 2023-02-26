@@ -14,7 +14,7 @@ class Audio(commands.Cog):
         self.bot = bot
 
 
-    @commands.command(name="joinvc", aliases=["join, summon, connect"])
+    @commands.command(name="joinvc", aliases=["join", "summon", "connect"])
     async def join_author_vc(self, ctx):
         """Join voice channel of message author."""
         try:
@@ -25,7 +25,7 @@ class Audio(commands.Cog):
             pass
 
 
-    @commands.command(name="leavevc", aliases=["leave, disconnect"])
+    @commands.command(name="leavevc", aliases=["leave", "disconnect"])
     async def leave_vc(self, ctx):
         """Leave current voice channel."""
         try:
@@ -34,7 +34,7 @@ class Audio(commands.Cog):
             pass
 
 
-    @commands.command(name="sing", aliases=["play, stream"])
+    @commands.command(name="sing", aliases=["play", "stream"])
     async def sing_yt(self, ctx, *, url: str):
         """Played audio from YouTube given URL."""
         ydl_options = {

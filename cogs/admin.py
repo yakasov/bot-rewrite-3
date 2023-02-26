@@ -19,7 +19,7 @@ class Admin(commands.Cog):
         Popen("python main.py")
 
 
-    @commands.command(hidden=True)
+    @commands.command(name="stop_bot", aliases=["stopbot", "kill", "logout"], hidden=True)
     @commands.is_owner()
     async def stop(self, ctx):
         """Stop bot."""

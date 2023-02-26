@@ -56,13 +56,13 @@ async def set_nick_to_time():
     await bot.change_presence(activity=Game(f"New Years in {hours} hours!"))
 
 
-@tasks.loop(seconds=c["discord"]["presence_delay"] * 2)
+@tasks.loop(seconds=int(c["discord"]["presence_delay"]) * 2)
 async def query_mc_server():
     """Rotate rich presence through functions below on certain delay."""
     server_1 = JavaServer(c["minecraft"]["server_1_ip"], int(c["minecraft"]["server_1_port"]))
     server_2 = JavaServer(c["minecraft"]["server_2_ip"], int(c["minecraft"]["server_2_port"]))
     await query_mc_server_players(server_1, server_2)
-    await sleep(c["discord"]["presence_delay"])
+    await sleep(int(c["discord"]["presence_delay"]))
     await query_mc_server_names(server_1, server_2)
 
 

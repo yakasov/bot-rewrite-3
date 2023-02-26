@@ -26,6 +26,6 @@ class Commands(commands.Cog):
             await ctx.send(ctx.author.avatar_url)
 
 
-async def setup(bot):
+def setup(bot):
     """Add generic commands to bot."""
-    await bot.add_cog(Commands(bot))
+    bot.add_cog(Commands(bot))

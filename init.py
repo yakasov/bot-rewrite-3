@@ -39,8 +39,10 @@ bot = commands.Bot(
     help_command=help_category_fix,
     intents=intents,
 )
-bot.load_extension("admin")
-bot.load_extension("commands")
+
+extensions = ["cogs.admin", "cogs.commands"]
+for extension in extensions:
+    bot.load_extension(extension)
 
 logger = logging.getLogger("discord")
 logger.setLevel(c["discord"]["logger_level"])

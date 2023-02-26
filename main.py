@@ -13,7 +13,6 @@ Author - yakasov
 
 from datetime import date
 from time import gmtime, strftime
-import asyncio
 import os
 import discord
 from init import activity, bot, c
@@ -110,5 +109,4 @@ YijBa5Jl4aKIkFP7.mp4",
             return  # Stop multiple replies in one message
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(bot.start(c["discord"]["token"]))
+bot.run(c["discord"]["token"])

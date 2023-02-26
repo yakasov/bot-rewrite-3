@@ -1,4 +1,4 @@
-"""Initialise config for all sub-files to use."""
+"""Initialise config and bot for all sub-files to use."""
 from configparser import ConfigParser
 import json
 import os

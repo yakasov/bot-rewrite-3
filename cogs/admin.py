@@ -53,5 +53,5 @@ class Admin(commands.Cog):
 
 
 def setup(bot):
-    """Add generic commands to bot."""
+    """Add admin commands to bot."""
     bot.add_cog(Admin(bot))

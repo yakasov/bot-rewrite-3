@@ -7,5 +7,4 @@ birthdays.json
 config.cfg
 cache
 discord.log
-*.png
 !run.bat

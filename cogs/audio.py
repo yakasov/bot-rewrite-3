@@ -66,7 +66,7 @@ class Audio(commands.Cog):
             await ctx.channel.send('URL not recognised.')
 
 
-    @commands.command(name="stop_audio")
+    @commands.command(name="shutup")
     async def stop_audio(self, ctx):
         """Stop playing audio."""
         channel_voice_stream = get(self.bot.voice_clients)

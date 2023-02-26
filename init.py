@@ -40,7 +40,7 @@ bot = commands.Bot(
     intents=intents,
 )
 
-extensions = ["cogs.admin", "cogs.commands"]
+extensions = ["cogs.admin", "cogs.audio", "cogs.commands"]
 for extension in extensions:
     bot.load_extension(extension)
 

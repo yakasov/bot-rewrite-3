@@ -2,6 +2,7 @@
 
 from discord.ext import commands
 
+
 class Commands(commands.Cog):
     """Class to hold all generic commands."""
     def __init__(self, bot):

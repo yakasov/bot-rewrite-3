@@ -1,0 +1,11 @@
+# Folders
+__pycache__
+.vscode
+
+# Files
+birthdays.json
+config.cfg
+cache
+discord.log
+*.png
+!run.bat

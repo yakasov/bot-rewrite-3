@@ -4,5 +4,6 @@ __pycache__
 
 # Files
 cache
+config.cfg
 discord.log
 !run.bat

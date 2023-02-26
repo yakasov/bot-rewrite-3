@@ -2,11 +2,15 @@
 Yet another Discord bot rewrite.
 
 Changes:
-- better file locations
-- birthdays as json
-- config
+- components split up into different files, uses cogs to load commands
+- birthdays as json for much easier reading
+- config to avoid changing variables in py files
 - requirements
-- general code cleanup
+
+Fixes:
+- restart now awaits logout before logging back in, resulting in a much cleaner restart
+- admin only commands now use is_owner() instead of hardcoded admin id
+- queries now done in batches to avoid rate limiting
 
 Author - yakasov
 """

@@ -14,6 +14,11 @@ class Commands(commands.Cog):
         self.c.read(os.getcwd() + r"\resources\config.cfg")
         if self.c["features"].getboolean("openai_chat"):
             openai.api_key = self.c["features"]["openai_token"]
+        self.ai3messages = [
+            {"role": "system", "content":
+             "You are a casual Discord chatting bot chatting in my personal Discord server.\
+Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."},
+        ]
 
 
     @commands.command()
@@ -39,35 +44,15 @@ class Commands(commands.Cog):
     async def getairesponse2(self, ctx, *, content: str):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
         if self.c["features"].getboolean("openai_chat") and \
-            ctx.channel.name == "chat-with-output-bot":
-            print(f"\nGenerating OpenAI reponse with prompt:\n{content}")
-            await ctx.send(f"\nGenerating OpenAI reponse with prompt:\n{content}")
+            ctx.channel.name == "chat-with-outputbot":
+            print(f"\nGenerating OpenAI (text-davinci-002, 512 tokens) \
+response with prompt:\n{content}")
+            await ctx.send(
+                f"\nGenerating OpenAI (text-davinci-002) response with prompt:\n{content}")
             response = openai.Completion.create(
                 engine="text-davinci-002",
                 prompt=content,
-                temperature=0.7,
-                top_p=0.9,
-                max_tokens=2048,
-                stop=["<|endoftext|>"],
-            )
-            message = response.choices[0].text.strip()
-            if len(message) > 2000:
-                message = message[:2000]
-            await ctx.reply(message)
-
-
-    @commands.command(name="ai3", hidden=True)
-    @commands.is_owner()
-    async def getairesponse3(self, ctx, *, content: str):
-        """Uses OpenAI API (text-davinci-003) to generate an AI response."""
-        if self.c["features"].getboolean("openai_chat") and \
-            ctx.channel.name == "chat-with-output-bot":
-            print(f"\nGenerating OpenAI reponse with prompt:\n{content}")
-            await ctx.send(f"\nGenerating OpenAI reponse with prompt:\n{content}")
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=content,
-                temperature=0.7,
+                temperature=0.9,
                 top_p=0.9,
                 max_tokens=1024,
                 stop=["<|endoftext|>"],
@@ -76,6 +61,38 @@ class Commands(commands.Cog):
             if len(message) > 2000:
                 message = message[:2000]
             await ctx.reply(message)
+
+
+    @commands.command(name="ai3", aliases=["aix"])
+    async def getairesponse3(self, ctx, *, content: str):
+        """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
+        if self.c["features"].getboolean("openai_chat") and \
+            ctx.channel.name == "chat-with-outputbot":
+            print(f"\nGenerating OpenAI (gpt-3.5-turbo) \
+response with prompt:\n{content}")
+            await ctx.send(f"\nGenerating OpenAI (gpt-3.5-turbo) response with prompt:\n{content}")
+            self.ai3messages.append({"role": "user", "content": content})
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=self.ai3messages
+            )
+            message = response["choices"][0]["message"]
+            self.ai3messages.append(message)
+            if len(message["content"]) > 2000:
+                message = message["content"][:2000]
+            await ctx.reply(message["content"])
+
+
+    @commands.command(name="refresh", hidden=True)
+    @commands.is_owner()
+    async def refreshmessages(self, ctx):
+        """Refreshes the OpenAI AI3 messages."""
+        self.ai3messages = [
+            {"role": "system", "content":
+             "You are a casual Discord chatting bot chatting in my personal Discord server.\
+Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."},
+        ]
+        await ctx.send("Removed all prior OpenAI messages.")
 
 
 def setup(bot):

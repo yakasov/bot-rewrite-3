@@ -28,7 +28,7 @@ c.read(os.getcwd() + r"\resources\config.cfg")
 activity = discord.Activity(
     name=c["discord"]["activity"], type=discord.ActivityType.watching
 )
-allowed_mentions = discord.AllowedMentions(users=True)
+allowed_mentions = discord.AllowedMentions(everyone=False, users=True)
 help_category_fix = commands.DefaultHelpCommand(no_category="Commands")
 intents = discord.Intents.default()
 intents.members = True  # Subscribe to the privileged members intent

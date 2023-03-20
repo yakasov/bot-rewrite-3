@@ -44,7 +44,7 @@ Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."
     async def getairesponse2(self, ctx, *, content: str):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
         if self.c["features"].getboolean("openai_chat") and \
-            ctx.channel.name == "chat-with-outputbot":
+            ctx.channel.name in ("chat-with-outputbot", "bot"):
             print(f"\n## Generating OpenAI (text-davinci-002, 512 tokens) \
 response with prompt:\n## {content}")
             await ctx.send(
@@ -67,7 +67,7 @@ response with prompt:\n## {content}")
     async def getairesponse3(self, ctx, *, content: str):
         """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
         if self.c["features"].getboolean("openai_chat") and \
-            ctx.channel.name == "chat-with-outputbot":
+            ctx.channel.name in ("chat-with-outputbot", "bot"):
             print(f"\n## Generating OpenAI (gpt-3.5-turbo) \
 response with prompt:\n## {content}")
             await ctx.send(f"\nGenerating OpenAI (gpt-3.5-turbo) response with prompt:\n{content}")

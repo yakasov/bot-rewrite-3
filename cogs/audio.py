@@ -1,9 +1,11 @@
 """Singing commands for the bot."""
 
+from io import BytesIO
 import discord
 from discord import FFmpegOpusAudio
 from discord.ext import commands
 from discord.utils import get
+from gtts import gTTS
 from yt_dlp import YoutubeDL
 import yt_dlp
 
@@ -34,6 +36,20 @@ class Audio(commands.Cog):
             pass
 
 
+    @commands.command(name="talk", aliases=["tts"])
+    async def tts(self, ctx, *, content: str):
+        if ctx.author.voice:
+            channel = ctx.author.voice.channel
+            channel_voice_stream = await channel.connect()
+
+            tts = gTTS(text=content, lang='en')
+            mp3_fp = BytesIO()
+            tts.write_to_fp(mp3_fp)
+            mp3_fp.seek(0)
+
+            channel_voice_stream.play(discord.FFmpegPCMAudio(mp3_fp))
+
+
     @commands.command(name="play", aliases=["sing", "stream"])
     async def sing_yt(self, ctx, *, url: str):
         """Played audio from YouTube given URL."""
@@ -51,8 +67,11 @@ class Audio(commands.Cog):
         {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                         'options': '-vn'}
 
+        if ctx.author.voice:
+            channel = ctx.author.voice.channel
+            channel_voice_stream = await channel.connect()
+
         try:
-            channel_voice_stream = get(self.bot.voice_clients, guild=ctx.guild)
             if not channel_voice_stream.is_playing():
                 with YoutubeDL(ydl_options) as ydl:
                     info = ydl.extract_info(url, download=False)

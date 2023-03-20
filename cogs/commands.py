@@ -2,6 +2,7 @@
 
 from configparser import ConfigParser
 import os
+import threading
 from discord.ext import commands
 import openai
 
@@ -41,7 +42,11 @@ Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."
 
 
     @commands.command(name="ai", aliases=["ai2"])
-    async def getairesponse2(self, ctx, *, content: str):
+    async def startai2thread(self, ctx, *, content: str):
+        """Begins the normal AI thread."""
+        threading.Thread(target=getairesponse2, args=(ctx, content)).start()
+
+    async def getairesponse2(self, ctx, content: str):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
         if self.c["features"].getboolean("openai_chat") and \
             ctx.channel.name == "chat-with-outputbot":
@@ -64,6 +69,10 @@ response with prompt:\n{content}")
 
 
     @commands.command(name="ai3", aliases=["aix"])
+    async def startai3thread(self, ctx, *, content: str):
+        """Begins the conversational AI thread."""
+        threading.Thread(target=getairesponse3, args=(ctx, content)).start()
+
     async def getairesponse3(self, ctx, *, content: str):
         """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
         if self.c["features"].getboolean("openai_chat") and \

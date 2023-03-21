@@ -4,6 +4,7 @@ __pycache__
 
 # Files
 cache
-config.cfg
+resources/config.cfg
 discord.log
+tts.mp3
 !run.bat

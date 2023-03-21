@@ -76,9 +76,9 @@ class Audio(commands.Cog):
         await channel.connect()
 
 
-    @commands.command(name="play", aliases=["sing", "stream"])
+    @commands.command(aliases=["sing", "play"])
     async def stream(self, ctx, *, url):
-        """Streams from a url (same as yt, but doesn't predownload)"""
+        """Streams from a YouTube url."""
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)

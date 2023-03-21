@@ -1,5 +1,6 @@
 """Initialise config and bot for all sub-files to use."""
 from configparser import ConfigParser
+import asyncio
 import json
 import os
 import logging
@@ -44,7 +45,7 @@ bot = commands.Bot(
 
 extensions = ["cogs.admin", "cogs.audio", "cogs.commands"]
 for extension in extensions:
-    bot.load_extension(extension)
+    asyncio.run(bot.load_extension(extension))
 
 logger = logging.getLogger("discord")
 logger.setLevel(c["discord"]["logger_level"])

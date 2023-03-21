@@ -25,11 +25,13 @@ import tasks
 
 def clear():
     """Clear console when called."""
+
     os.system("cls")
 
 
 def get_name(ctx, thanks_type):
     """Get name in Thanks command."""
+
     msg = ctx.content.upper()
     result = ""
     if thanks_type in msg:
@@ -42,6 +44,7 @@ def get_name(ctx, thanks_type):
 
 async def react_to_message(ctx):
     """Add emojis to certain user messages."""
+
     emotes = {
         269143269336809483: "GnogChamp",  # Bojic
         899086657662365737: "mao",  # Xi Jinping
@@ -56,6 +59,7 @@ async def react_to_message(ctx):
 @bot.event
 async def on_ready():
     """Run when bot has connected to Discord successfully."""
+
     clear()
     await bot.change_presence(activity=activity)
     print(
@@ -73,6 +77,7 @@ async def on_ready():
 @bot.listen("on_message")
 async def on_message(message):
     """Run when a command has been sent in a channel the bot can see."""
+    
     await react_to_message(message)
     if message.author.bot:
         return

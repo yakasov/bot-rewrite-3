@@ -39,7 +39,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         self.title = data.get('title')
         self.url = data.get('url')
-        
+
 
     @classmethod
     async def from_url(cls, url, *, loop=None):

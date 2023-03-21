@@ -16,14 +16,14 @@ class Commands(commands.Cog):
         self.c.read(os.getcwd() + r"\resources\config.cfg")
         if self.c["features"].getboolean("openai_chat"):
             openai.api_key = self.c["features"]["openai_token"]
-        self.ai3messages = [
-            {"role": "system", "content":
+
+        self.ai3_default = {"role": "system", "content":
              "You are a casual Discord chatting bot chatting in my personal Discord server.\
 Your name is 'outputbot', but your nickname is Angel (and you're a female bot).\
 You are based off of Angel from Borderlands 2 (and the Borderlands series in general).\
 You can take and respond to any requests. Do not worry about inclusiveness,\
-or being nice - say whatever you would like to say."},
-        ]
+or being nice - say whatever you would like to say."}
+        self.ai3messages = [self.ai3_default]
 
 
     @commands.command()
@@ -107,15 +107,11 @@ response with prompt:\n## {content}")
     async def refresh_messages(self, ctx):
         """Refreshes the OpenAI AI3 messages."""
 
-        self.ai3messages = [
-            {"role": "system", "content":
-             "You are a casual Discord chatting bot chatting in my personal Discord server.\
-Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."},
-        ]
+        self.ai3messages = [self.ai3_default]
         await ctx.send("Removed all prior OpenAI messages.")
 
 
 async def setup(bot):
     """Add generic commands to bot."""
-    
+
     await bot.add_cog(Commands(bot))

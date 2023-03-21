@@ -1,13 +1,13 @@
 """
 Yet another Discord bot rewrite.
 
-Changes:
+Initial changes:
 - components split up into different files, uses cogs to load commands
 - birthdays as json for much easier reading
 - config to avoid changing variables in py files
 - requirements
 
-Fixes:
+Initial fixes:
 - restart now awaits logout before logging back in, resulting in a much cleaner restart
 - admin only commands now use is_owner() instead of hardcoded admin id
 - queries now done in batches to avoid rate limiting
@@ -77,7 +77,7 @@ async def on_ready():
 @bot.listen("on_message")
 async def on_message(message):
     """Run when a command has been sent in a channel the bot can see."""
-    
+
     await react_to_message(message)
     if message.author.bot:
         return

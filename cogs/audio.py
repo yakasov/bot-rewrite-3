@@ -109,6 +109,6 @@ class Audio(commands.Cog):
         await ctx.voice_client.disconnect()
 
 
-def setup(bot):
+async def setup(bot):
     """Add audio commands to bot."""
-    bot.add_cog(Audio(bot))
+    await bot.add_cog(Audio(bot))

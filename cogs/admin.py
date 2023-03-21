@@ -52,6 +52,6 @@ class Admin(commands.Cog):
             )
 
 
-def setup(bot):
+async def setup(bot):
     """Add admin commands to bot."""
-    bot.add_cog(Admin(bot))
+    await bot.add_cog(Admin(bot))

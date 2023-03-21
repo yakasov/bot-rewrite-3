@@ -95,6 +95,6 @@ Your name is 'outputbot', but your nickname is Angel (and you're a female bot)."
         await ctx.send("Removed all prior OpenAI messages.")
 
 
-def setup(bot):
+async def setup(bot):
     """Add generic commands to bot."""
-    bot.add_cog(Commands(bot))
+    await bot.add_cog(Commands(bot))

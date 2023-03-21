@@ -1,5 +1,6 @@
 """Initialise config and bot for all sub-files to use."""
 from configparser import ConfigParser
+import asyncio
 import json
 import os
 import logging
@@ -9,6 +10,8 @@ import discord
 
 def get_file(location):
     """Return contents of file at {location}."""
+    if not os.path.exists(location):
+        return None
     with open(location, "r", encoding="utf-8") as file:
         result = file.read()
         file.close()
@@ -42,7 +45,7 @@ bot = commands.Bot(
 
 extensions = ["cogs.admin", "cogs.audio", "cogs.commands"]
 for extension in extensions:
-    bot.load_extension(extension)
+    asyncio.run(bot.load_extension(extension))
 
 logger = logging.getLogger("discord")
 logger.setLevel(c["discord"]["logger_level"])
@@ -55,3 +58,5 @@ logger.addHandler(handler)
 with open("resources/birthdays.json", "r", encoding="utf-8") as f:
     birthdays = json.load(f)
 cache = get_file("resources/cache")
+if not cache:
+    write_file("resources/cache", "")

@@ -1,12 +1,10 @@
 """Singing commands for the bot."""
 
-from io import BytesIO
 import asyncio
 from discord.ext import commands
 from gtts import gTTS
 from yt_dlp import YoutubeDL
 import discord
-import yt_dlp
 
 
 ffmpeg_options = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
@@ -33,6 +31,7 @@ ytdl = YoutubeDL(ytdl_format_options)
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
+    """Class for YouTube audio stream."""
     def __init__(self, source, *, data, volume=0.8):
         super().__init__(source, volume)
 
@@ -43,26 +42,30 @@ class YTDLSource(discord.PCMVolumeTransformer):
         
 
     @classmethod
-    async def from_url(self, url, *, loop=None, stream=False):
+    async def from_url(cls, url, *, loop=None):
+        """Get a YouTube audio stream from a given url."""
+
         loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=False))
 
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
 
-        filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return self(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+        filename = data['url']
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 
 class Audio(commands.Cog):
+    """Class to hold all audio related commands."""
     def __init__(self, bot):
         self.bot = bot
 
 
-    @commands.command()
+    @commands.command(aliases=["summon"])
     async def join(self, ctx):
-        """Joins a voice channel"""
+        """Joins a voice channel."""
+
         if not ctx.author.voice:
             return None
         channel = ctx.author.voice.channel
@@ -78,35 +81,35 @@ class Audio(commands.Cog):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+            player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            ctx.voice_client.play(player,
+                                  after=lambda e: print(f'Player error: {e}') if e else None)
 
 
-    @commands.command()
+    @commands.command(aliases=["disconnect", "dc"])
     async def stop(self, ctx):
         """Stops and disconnects the bot from voice"""
 
         await ctx.voice_client.disconnect()
 
 
-    @commands.command(name="tts", aliases=["talk"])
+    @commands.command(aliases=["talk"])
     async def tts(self, ctx, *, content: str):
         """Generate a TTS output from a given input."""
+
         tts = gTTS(text=content, lang='en')
         tts.save('tts.mp3')
-        # mp3_fp = BytesIO()
-        # tts.write_to_fp(mp3_fp)
-        # mp3_fp.seek(0)
-
-
         async with ctx.typing():
-            player = discord.FFmpegPCMAudio('tts.mp3', **ffmpeg_options)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+            player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
+            ctx.voice_client.play(player,
+                                  after=lambda e: print(f'Player error: {e}') if e else None)
 
 
     @tts.before_invoke
     @stream.before_invoke
     async def ensure_voice(self, ctx):
+        """Ensure bot is in a voice channel before running a command."""
+
         if ctx.voice_client is None:
             if ctx.author.voice:
                 await ctx.author.voice.channel.connect()
@@ -119,4 +122,5 @@ class Audio(commands.Cog):
 
 async def setup(bot):
     """Add audio commands to bot."""
+
     await bot.add_cog(Audio(bot))

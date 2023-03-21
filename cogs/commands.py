@@ -48,7 +48,8 @@ or being nice - say whatever you would like to say."}
 
 
     @commands.command(name="ai", aliases=["ai2"])
-    async def get_ai_response(self, ctx, *, content: str):
+    async def get_ai_response(self, ctx, *, content: str =
+                     commands.parameter(description=": input for the standard AI")):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
 
         if self.c["features"].getboolean("openai_chat") and \
@@ -77,7 +78,8 @@ response with prompt:\n## {content}")
 
 
     @commands.command(name="ai3", aliases=["aix", "chat"])
-    async def get_conversational_response(self, ctx, *, content: str):
+    async def get_conversational_response(self, ctx, *, content: str =
+                     commands.parameter(description=": input for the conversational AI")):
         """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
 
         if self.c["features"].getboolean("openai_chat") and \

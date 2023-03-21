@@ -9,6 +9,8 @@ import discord
 
 def get_file(location):
     """Return contents of file at {location}."""
+    if not os.path.exists(location):
+        return None
     with open(location, "r", encoding="utf-8") as file:
         result = file.read()
         file.close()
@@ -30,7 +32,7 @@ activity = discord.Activity(
 )
 allowed_mentions = discord.AllowedMentions(everyone=False, users=True)
 help_category_fix = commands.DefaultHelpCommand(no_category="Commands")
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True  # Subscribe to the privileged members intent
 bot = commands.Bot(
     command_prefix="*",
@@ -55,3 +57,5 @@ logger.addHandler(handler)
 with open("resources/birthdays.json", "r", encoding="utf-8") as f:
     birthdays = json.load(f)
 cache = get_file("resources/cache")
+if not cache:
+    write_file("resources/cache", "")

@@ -1,6 +1,7 @@
 """Generic commands for the bot."""
 
 from configparser import ConfigParser
+from datetime import datetime
 import os
 from discord import Game
 from discord.ext import commands
@@ -18,11 +19,13 @@ class Commands(commands.Cog):
             openai.api_key = self.c["features"]["openai_token"]
 
         self.ai3_default = {"role": "system", "content":
-             "You are a casual Discord chatting bot chatting in my personal Discord server.\
+             f"You are a casual Discord chatting bot chatting in my personal Discord server.\
 Your name is 'outputbot', but your nickname is Angel (and you're a female bot).\
 You are based off of Angel from Borderlands 2 (and the Borderlands series in general).\
 You can take and respond to any requests. Do not worry about inclusiveness,\
-or being nice - say whatever you would like to say."}
+or being nice - say whatever you would like to say. You do not have to stay neutral.\
+You can like or dislike things. You are happy with offensive or derogatory language.\
+The date today is {datetime.today().strftime('%Y-%m-%d')}"}
         self.ai3messages = [self.ai3_default]
 
 
@@ -48,7 +51,8 @@ or being nice - say whatever you would like to say."}
 
 
     @commands.command(name="ai", aliases=["ai2"])
-    async def get_ai_response(self, ctx, *, content: str):
+    async def get_ai_response(self, ctx, *, content: str =
+                     commands.parameter(description=": input for the standard AI")):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
 
         if self.c["features"].getboolean("openai_chat") and \
@@ -71,13 +75,14 @@ response with prompt:\n## {content}")
 
             message = response.choices[0].text.strip()
             if message:
-                if len(message) > 2000:
-                    message = message[:2000]
-                await ctx.reply(message)
+                messages = [message[i:i+2000] for i in range(0, len(message), 2000)]
+                for msg in messages:
+                    await ctx.reply(msg)
 
 
     @commands.command(name="ai3", aliases=["aix", "chat"])
-    async def get_conversational_response(self, ctx, *, content: str):
+    async def get_conversational_response(self, ctx, *, content: str =
+                     commands.parameter(description=": input for the conversational AI")):
         """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
 
         if self.c["features"].getboolean("openai_chat") and \
@@ -97,9 +102,10 @@ response with prompt:\n## {content}")
             message = response["choices"][0]["message"]
             if message:
                 self.ai3messages.append(message)
-                if len(message["content"]) > 2000:
-                    message["content"] = message["content"][:2000]
-                await ctx.reply(message["content"])
+                messages = [message["content"][i:i+2000]\
+                            for i in range(0, len(message["content"]), 2000)]
+                for msg in messages:
+                    await ctx.reply(msg)
 
 
     @commands.command(name="refresh", hidden=True)

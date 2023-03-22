@@ -30,30 +30,40 @@ The date today is {datetime.today().strftime('%Y-%m-%d')}"}
 
 
     @commands.command()
-    async def say(self, ctx, *, content: str):
+    async def say(self, ctx, *, content: str =
+                  commands.parameter(default="", description=": string to say")):
         """Say something given a message."""
+
+        if not content:
+            return None
 
         await ctx.message.delete()
         await ctx.send(content)
 
 
     @commands.command(name="getpfp")
-    async def get_pfp(self, ctx, *user_id):
+    async def get_pfp(self, ctx, user_id: str =
+                      commands.parameter(default=lambda ctx: ctx.author.avatar.url,
+                                         description=": user ID to get the profile pic of")):
         """Get profile picture of user given ID. If no ID, use author."""
 
         if user_id:
+            if user_id == ctx.author.avatar.url:
+                return await ctx.send(user_id)
             try:
-                await ctx.send(self.bot.get_user(int(user_id[0])).avatar_url)
+                await ctx.send(self.bot.get_user(int(user_id[0])).avatar.url)
             except (AttributeError, ValueError):
                 await ctx.send("Invalid ID!")
-        else:
-            await ctx.send(ctx.author.avatar_url)
 
 
     @commands.command(name="ai", aliases=["ai2"])
     async def get_ai_response(self, ctx, *, content: str =
-                     commands.parameter(description=": input for the standard AI")):
+                     commands.parameter(default="",
+                                        description=": input for the standard AI")):
         """Uses OpenAI API (text-davinci-002) to generate an AI response."""
+
+        if not content:
+            return None
 
         if self.c["features"].getboolean("openai_chat") and \
             ctx.channel.name in ("chat-with-outputbot", "bot"):
@@ -82,8 +92,12 @@ response with prompt:\n## {content}")
 
     @commands.command(name="ai3", aliases=["aix", "chat"])
     async def get_conversational_response(self, ctx, *, content: str =
-                     commands.parameter(description=": input for the conversational AI")):
+                     commands.parameter(default="",
+                                        description=": input for the conversational AI")):
         """Uses OpenAI API (gpt-3.5-turbo) to generate an AI response."""
+
+        if not content:
+            return None
 
         if self.c["features"].getboolean("openai_chat") and \
             ctx.channel.name in ("chat-with-outputbot", "bot"):

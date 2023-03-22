@@ -78,11 +78,12 @@ class Audio(commands.Cog):
 
     @commands.command(aliases=["sing", "play"])
     async def stream(self, ctx, *, url: str =
-                     commands.parameter(description=": the YouTube URL to stream audio from")):
+                     commands.parameter(default="",
+                                        description=": the YouTube URL to stream audio from")):
         """Streams from a YouTube url."""
 
         if not url:
-            return
+            return None
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
@@ -99,11 +100,12 @@ class Audio(commands.Cog):
 
     @commands.command(aliases=["talk"])
     async def tts(self, ctx, *, content: str =
-                  commands.parameter(description=": content to pass to Google TTS service")):
+                  commands.parameter(default="",
+                                     description=": content to pass to Google TTS service")):
         """Generate a TTS output from a given input."""
 
         if not content:
-            return
+            return None
 
         tts = gTTS(text=content, lang='en')
         tts.save('tts.mp3')

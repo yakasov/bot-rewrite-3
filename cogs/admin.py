@@ -34,13 +34,17 @@ class Admin(commands.Cog):
         """Sends all profile pictures for everyone in server."""
 
         for user in ctx.guild.members:
-            await ctx.send(f"{user.name}\n{user.avatar_url}")
+            await ctx.send(f"{user.name}\n{user.avatar.url}")
 
 
     @commands.command(name="setpfp", hidden=True)
     @commands.is_owner()
-    async def set_pfp(self, ctx, *rel_path):
+    async def set_pfp(self, ctx, rel_path: str =
+                      commands.parameter(default="", description=": local path to img")):
         """Set bot profile picture using relative path.)"""
+
+        if not rel_path:
+            return None
 
         try:
             with open(rel_path[0], "rb") as avatar:

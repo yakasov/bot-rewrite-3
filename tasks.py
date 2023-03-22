@@ -13,6 +13,7 @@ from init import birthdays, bot, c, cache, write_file
 async def check_current_date():
     """Check date every fifteen minutes,
     allowing for the bot to celebrate birthdays without a restart."""
+
     today = str(date.today().strftime("%d/%m"))
     if cache != today:
         guild = bot.get_guild(int(c["discord"]["guild"]))
@@ -26,6 +27,7 @@ async def check_current_date():
 
 async def remove_birthday_role(guild, bday_role, today):
     """Remove birthday role from anybody that has it past their birthday."""
+
     for member in guild.members:
         try:
             if bday_role in member.roles and birthdays[str(member.id)]["date"] != today:
@@ -36,6 +38,7 @@ async def remove_birthday_role(guild, bday_role, today):
 
 async def check_birthdays(guild, bday_channel, bday_role, today):
     """Check to see if it's someone's birthday! Uses birthday file from resources."""
+
     for member in guild.members:
         try:
             if birthdays[str(member.id)]["date"] == today:
@@ -50,6 +53,7 @@ async def check_birthdays(guild, bday_channel, bday_role, today):
 @tasks.loop(seconds=300)
 async def set_nick_to_time():
     """Currently sets status to hours to Special Date!"""
+
     now = gmtime()
     special = strptime(c["miscellaneous"]["special_date"], '%d-%m-%y %H:%M:%S')
     hours = round((mktime(special) - mktime(now)) / 3600)
@@ -59,6 +63,7 @@ async def set_nick_to_time():
 @tasks.loop(seconds=int(c["discord"]["presence_delay"]) * 2)
 async def query_mc_server():
     """Rotate rich presence through functions below on certain delay."""
+
     server_1 = JavaServer(c["minecraft"]["server_1_ip"], int(c["minecraft"]["server_1_port"]))
     server_2 = JavaServer(c["minecraft"]["server_2_ip"], int(c["minecraft"]["server_2_port"]))
     await query_mc_server_players(server_1, server_2)
@@ -68,6 +73,7 @@ async def query_mc_server():
 
 async def query_mc_server_players(server_1, server_2):
     """Query MCSERVER and set presence to amount of players online."""
+
     try:
         players_online = server_1.status().players.online + \
             server_2.status().players.online
@@ -83,6 +89,7 @@ async def query_mc_server_players(server_1, server_2):
 
 async def query_mc_server_names(server_1, server_2):
     """Query MCSERVER and set presence to names of players online."""
+    
     try:
         players = server_1.query().players.names + server_2.query().players.names
         player_display = '\n| '.join(players)

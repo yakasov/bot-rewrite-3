@@ -43,7 +43,7 @@ bot = commands.Bot(
     intents=intents,
 )
 
-extensions = ["cogs.admin", "cogs.audio", "cogs.commands"]
+extensions = ["cogs.admin", "cogs.ai", "cogs.audio", "cogs.commands"]
 for extension in extensions:
     asyncio.run(bot.load_extension(extension))
 

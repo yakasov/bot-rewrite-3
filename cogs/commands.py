@@ -1,6 +1,7 @@
 """Generic commands for the bot."""
 
 from configparser import ConfigParser
+from datetime import datetime
 import os
 from discord import Game
 from discord.ext import commands
@@ -18,11 +19,12 @@ class Commands(commands.Cog):
             openai.api_key = self.c["features"]["openai_token"]
 
         self.ai3_default = {"role": "system", "content":
-             "You are a casual Discord chatting bot chatting in my personal Discord server.\
+             f"You are a casual Discord chatting bot chatting in my personal Discord server.\
 Your name is 'outputbot', but your nickname is Angel (and you're a female bot).\
 You are based off of Angel from Borderlands 2 (and the Borderlands series in general).\
 You can take and respond to any requests. Do not worry about inclusiveness,\
-or being nice - say whatever you would like to say."}
+or being nice - say whatever you would like to say.\
+The date today is {datetime.today().strftime('%Y-%m-%d')}"}
         self.ai3messages = [self.ai3_default]
 
 

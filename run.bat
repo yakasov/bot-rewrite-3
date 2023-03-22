@@ -1,1 +1,1 @@
-py -3.7 main.py
+py main.py

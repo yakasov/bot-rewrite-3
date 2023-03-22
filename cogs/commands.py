@@ -43,15 +43,15 @@ The date today is {datetime.today().strftime('%Y-%m-%d')}"}
 
     @commands.command(name="getpfp")
     async def get_pfp(self, ctx, user_id: str =
-                      commands.parameter(default=lambda ctx: ctx.author.avatar_url,
+                      commands.parameter(default=lambda ctx: ctx.author.avatar.url,
                                          description=": user ID to get the profile pic of")):
         """Get profile picture of user given ID. If no ID, use author."""
 
         if user_id:
-            if user_id == ctx.author.avatar_url:
-                await ctx.send(user_id)
+            if user_id == ctx.author.avatar.url:
+                return await ctx.send(user_id)
             try:
-                await ctx.send(self.bot.get_user(int(user_id[0])).avatar_url)
+                await ctx.send(self.bot.get_user(int(user_id[0])).avatar.url)
             except (AttributeError, ValueError):
                 await ctx.send("Invalid ID!")
 

@@ -34,7 +34,7 @@ class Admin(commands.Cog):
         """Sends all profile pictures for everyone in server."""
 
         for user in ctx.guild.members:
-            await ctx.send(f"{user.name}\n{user.avatar_url}")
+            await ctx.send(f"{user.name}\n{user.avatar.url}")
 
 
     @commands.command(name="setpfp", hidden=True)

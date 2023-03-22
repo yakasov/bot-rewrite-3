@@ -75,9 +75,9 @@ response with prompt:\n## {content}")
 
             message = response.choices[0].text.strip()
             if message:
-                if len(message) > 2000:
-                    message = message[:2000]
-                await ctx.reply(message)
+                messages = [message[i:i+2000] for i in range(0, len(message), 2000)]
+                for msg in messages:
+                    await ctx.reply(msg)
 
 
     @commands.command(name="ai3", aliases=["aix", "chat"])
@@ -102,9 +102,10 @@ response with prompt:\n## {content}")
             message = response["choices"][0]["message"]
             if message:
                 self.ai3messages.append(message)
-                if len(message["content"]) > 2000:
-                    message["content"] = message["content"][:2000]
-                await ctx.reply(message["content"])
+                messages = [message["content"][i:i+2000]\
+                            for i in range(0, len(message["content"]), 2000)]
+                for msg in messages:
+                    await ctx.reply(msg)
 
 
     @commands.command(name="refresh", hidden=True)

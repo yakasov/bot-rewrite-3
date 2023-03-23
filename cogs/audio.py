@@ -50,10 +50,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=False))
 
         if 'entries' in data:
+            # take first item from a playlist
             data = data['entries'][0]
 
         filename = data['url']
-        return cls(discord.FFmpegOpusAudio(filename, **ffmpeg_options), data=data)
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 
 class Audio(commands.Cog):
@@ -114,7 +115,7 @@ class Audio(commands.Cog):
             tts = gTTS(text=content, lang='en')
             tts.save('tts.mp3')
             async with ctx.typing():
-                player = discord.PCMVolumeTransformer(discord.FFmpegOpusAudio('tts.mp3'))
+                player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
                 ctx.voice_client.play(player,
                                     after=lambda e: print(f'Player error: {e}') if e else None)
         except exceptions.HTTPError:

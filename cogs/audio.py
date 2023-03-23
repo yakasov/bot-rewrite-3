@@ -3,6 +3,7 @@
 import asyncio
 from discord.ext import commands
 from gtts import gTTS
+from requests import exceptions
 from yt_dlp import YoutubeDL
 import discord
 
@@ -107,12 +108,16 @@ class Audio(commands.Cog):
         if not content:
             return None
 
-        tts = gTTS(text=content, lang='en')
-        tts.save('tts.mp3')
-        async with ctx.typing():
-            player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
-            ctx.voice_client.play(player,
-                                  after=lambda e: print(f'Player error: {e}') if e else None)
+        try:
+            tts = gTTS(text=content, lang='en')
+            tts.save('tts.mp3')
+            async with ctx.typing():
+                player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
+                ctx.voice_client.play(player,
+                                    after=lambda e: print(f'Player error: {e}') if e else None)
+        except exceptions.HTTPError:
+            # 503 Server Error from gTTS
+            return await ctx.send("503 Server Error: Service likely unavailable for gTTS currently.")
 
 
     @tts.before_invoke

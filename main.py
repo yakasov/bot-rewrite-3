@@ -82,13 +82,14 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    print(
-        f'\n{strftime("[%Y-%m-%d %H:%M:%S] ", gmtime())}\
-SERVER: {message.guild.name} | CHANNEL: {message.channel}\n{message.author}: {message.content}'
-    )
-    if message.attachments:
-        for attached in message.attachments:
-            print(f" > {attached.filename}")
+    if message.content[0] == bot.command_prefix:
+        print(
+            f'\n{strftime("[%Y-%m-%d %H:%M:%S] ", gmtime())}\
+    SERVER: {message.guild.name} | CHANNEL: {message.channel}\n{message.author}: {message.content}'
+        )
+        if message.attachments:
+            for attached in message.attachments:
+                print(f" > {attached.filename}")
 
     responses = {
         "LEAGUE": "league gay",

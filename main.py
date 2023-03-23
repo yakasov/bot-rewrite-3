@@ -122,8 +122,7 @@ YijBa5Jl4aKIkFP7.mp4",
 
     for msg, res in responses.items():
         if f" {msg} " in f" {message.content.upper()} ":
-            await message.channel.send(res)
-            return  # Stop multiple replies in one message
+            return await message.channel.send(res)
 
 
 bot.run(c["discord"]["token"])

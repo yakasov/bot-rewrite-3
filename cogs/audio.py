@@ -121,6 +121,8 @@ class Audio(commands.Cog):
         except exceptions.HTTPError:
             # 503 Server Error from gTTS
             return await ctx.send("503 Server Error: Service likely unavailable for gTTS.")
+        except AssertionError:
+            return await ctx.send("No text to send to gTTS API")
 
 
     @tts.before_invoke

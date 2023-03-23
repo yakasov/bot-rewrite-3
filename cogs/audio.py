@@ -74,7 +74,10 @@ class Audio(commands.Cog):
         if ctx.voice_client is not None:
             return await ctx.voice_client.move_to(channel)
 
-        await channel.connect()
+        try:
+            await channel.connect()
+        except AttributeError as ex:
+            await ctx.send(f"`{ex}`")
 
 
     @commands.command(aliases=["sing", "play"])
@@ -117,7 +120,7 @@ class Audio(commands.Cog):
                                     after=lambda e: print(f'Player error: {e}') if e else None)
         except exceptions.HTTPError:
             # 503 Server Error from gTTS
-            return await ctx.send("503 Server Error: Service likely unavailable for gTTS currently.")
+            return await ctx.send("503 Server Error: Service likely unavailable for gTTS.")
 
 
     @tts.before_invoke
@@ -127,7 +130,10 @@ class Audio(commands.Cog):
 
         if ctx.voice_client is None:
             if ctx.author.voice:
-                await ctx.author.voice.channel.connect()
+                try:
+                    await ctx.author.voice.channel.connect()
+                except AttributeError as ex:
+                    await ctx.send(f"`{ex}`")
             else:
                 await ctx.send("You are not connected to a voice channel.")
                 raise commands.CommandError("Author not connected to a voice channel.")

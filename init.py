@@ -13,7 +13,10 @@ def get_file(location):
     if not os.path.exists(location):
         return None
     with open(location, "r", encoding="utf-8") as file:
-        result = file.read()
+        if location[:4] == "json":
+            result = json.load(file)
+        else:
+            result = file.read()
         file.close()
     return result
 
@@ -55,8 +58,7 @@ handler.setFormatter(
 )
 logger.addHandler(handler)
 
-with open("resources/birthdays.json", "r", encoding="utf-8") as f:
-    birthdays = json.load(f)
+birthdays = get_file("resources/birthdays.json")
 cache = get_file("resources/cache")
 if not cache:
     write_file("resources/cache", "")

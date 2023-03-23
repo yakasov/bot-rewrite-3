@@ -67,10 +67,11 @@ async def on_ready():
  logged in as {bot.user}'
     )
 
-    tasks.check_current_date.start()
-    if c["features"].getboolean("date_countdown"):
+    if not tasks.check_current_date.is_running():
+        tasks.check_current_date.start()
+    if c["features"].getboolean("date_countdown") and not tasks.set_nick_to_time.is_running():
         tasks.set_nick_to_time.start()
-    if c["features"].getboolean("minecraft_status"):
+    if c["features"].getboolean("minecraft_status") and not tasks.query_mc_server.is_running():
         tasks.query_mc_server.start()
 
 

@@ -15,6 +15,7 @@ Initial fixes:
 Author - yakasov
 """
 
+from ctypes import util
 from datetime import date
 from time import gmtime, strftime
 import os
@@ -73,6 +74,9 @@ async def on_ready():
         tasks.set_nick_to_time.start()
     if c["features"].getboolean("minecraft_status") and not tasks.query_mc_server.is_running():
         tasks.query_mc_server.start()
+
+    if not discord.opus.is_loaded():
+        discord.opus.load_opus(r"resources\opus.dll")
 
 
 @bot.listen("on_message")

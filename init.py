@@ -36,9 +36,9 @@ help_category_fix = commands.DefaultHelpCommand(no_category="Commands")
 intents = discord.Intents.all()
 intents.members = True  # Subscribe to the privileged members intent
 bot = commands.Bot(
-    command_prefix="*",
     allowed_mentions=allowed_mentions,
     case_insensitive=True,
+    command_prefix="*",
     help_command=help_category_fix,
     intents=intents,
 )

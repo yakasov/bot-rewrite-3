@@ -82,7 +82,7 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    if message.content[0] == bot.command_prefix:
+    if message.content[0] == bot.command_prefix or message.author.id == 135410033524604928:
         print(
             f'\n{strftime("[%Y-%m-%d %H:%M:%S] ", gmtime())}\
     SERVER: {message.guild.name} | CHANNEL: {message.channel}\n{message.author}: {message.content}'

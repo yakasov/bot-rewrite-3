@@ -2,7 +2,10 @@
 
 from configparser import ConfigParser
 from datetime import datetime
+import asyncio
+import functools
 import os
+import typing
 from discord import Game
 from discord.ext import commands
 import openai
@@ -29,7 +32,29 @@ The date today is {datetime.today().strftime('%Y-%m-%d')}"}
         self.ai3messages = [self.ai3_default]
 
 
+    def ai_callback(self, func: typing.Callable, ctx, loop, *args, **kwargs) -> typing.Coroutine:
+        """Start asyncio coroutine for AI function."""
+
+        return asyncio.run_coroutine_threadsafe(func(self, ctx, *args, **kwargs), loop)
+
+
+    def to_thread(func: typing.Callable) -> typing.Coroutine:
+        """Wrap AI responses in loop to avoid blocking."""
+
+        @functools.wraps(func)
+        async def wrapper(self, ctx, *args, **kwargs):
+            if func:
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                return await asyncio.to_thread(self.ai_callback, func, ctx, loop, *args, **kwargs)
+            return None
+        return wrapper
+
+
     @commands.command(name="ai", aliases=["ai2"])
+    @to_thread
     async def get_ai_response(self, ctx, *, content: str =
                      commands.parameter(default="",
                                         description=": input for the standard AI")):
@@ -64,6 +89,7 @@ response with prompt:\n## {content}")
 
 
     @commands.command(name="ai3", aliases=["aix", "chat"])
+    @to_thread
     async def get_conversational_response(self, ctx, *, content: str =
                      commands.parameter(default="",
                                         description=": input for the conversational AI")):

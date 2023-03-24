@@ -13,17 +13,17 @@ class Admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def restart(self, ctx):
+    async def restart(self, _ctx):
         """Reload bot."""
 
         await self.bot.change_presence(activity=discord.Game("Restarting..."))
-        await self.bot.close()
         Popen("python main.py")
+        await self.bot.close()
 
 
     @commands.command(name="stop_bot", aliases=["stopbot", "kill", "logout"], hidden=True)
     @commands.is_owner()
-    async def stop(self, ctx):
+    async def stop(self, _ctx):
         """Stop bot."""
 
         await self.bot.close()

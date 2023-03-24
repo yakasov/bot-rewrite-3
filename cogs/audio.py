@@ -9,24 +9,24 @@ import discord
 
 
 ffmpeg_options = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                        'options': '-vn'}
+                  'options': '-vn'}
 ytdl_format_options = {
-            'format': 'bestaudio/best',
-            'noplaylist': True,
-            'extractaudio': True,
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '96',  # Highest bitrate Discord supports
-            }],
-            'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
-            'restrictfilenames': True,
-            'nocheckcertificate': True,
-            'ignoreerrors': False,
-            'logtostderr': False,
-            'quiet': True,
-            'no_warnings': True,
-            'default_search': 'auto',
+    'format': 'bestaudio/best',
+    'noplaylist': True,
+    'extractaudio': True,
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '96',  # Highest bitrate Discord supports
+    }],
+    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+    'restrictfilenames': True,
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'default_search': 'auto',
         }
 ytdl = YoutubeDL(ytdl_format_options)
 
@@ -99,7 +99,8 @@ class Audio(commands.Cog):
     async def stop(self, ctx):
         """Stops and disconnects the bot from voice"""
 
-        await ctx.voice_client.disconnect()
+        if ctx.voice_client:
+            await ctx.voice_client.disconnect()
 
 
     @commands.command(aliases=["talk"])
@@ -117,7 +118,7 @@ class Audio(commands.Cog):
             async with ctx.typing():
                 player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
                 ctx.voice_client.play(player,
-                                    after=lambda e: print(f'Player error: {e}') if e else None)
+                                      after=lambda e: print(f'Player error: {e}') if e else None)
         except exceptions.HTTPError:
             # 503 Server Error from gTTS
             return await ctx.send("503 Server Error: Service likely unavailable for gTTS.")

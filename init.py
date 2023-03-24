@@ -51,12 +51,14 @@ for extension in extensions:
     asyncio.run(bot.load_extension(extension))
 
 logger = logging.getLogger("discord")
+level = logging.getLevelName(c["discord"]["logger_level"])
 logger.setLevel(c["discord"]["logger_level"])
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(
     logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
 )
 logger.addHandler(handler)
+discord.utils.setup_logging(level=level, root=False)
 
 birthdays = get_file("resources/birthdays.json")
 cache = get_file("resources/cache")

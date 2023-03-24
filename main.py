@@ -124,4 +124,4 @@ YijBa5Jl4aKIkFP7.mp4",
             return await message.channel.send(res)
 
 
-bot.run(c["discord"]["token"])
+bot.run(c["discord"]["token"], log_handler=None)

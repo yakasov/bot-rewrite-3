@@ -17,7 +17,7 @@ ytdl_format_options = {
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',
-        'preferredquality': '96',  # Highest bitrate Discord supports
+        'preferredquality': '64',  # Highest bitrate Discord supports
     }],
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
@@ -91,8 +91,14 @@ class Audio(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player,
-                                  after=lambda e: print(f'Player error: {e}') if e else None)
+            try:
+                return await ctx.voice_client.play(player,
+                                                   after=lambda e:
+                                                   print(f'Player error: {e}') if e else None)
+            except discord.errors.ClientException as ex:
+                return await ctx.send(f"{ex}\nCurrent channel: \
+{f'{ctx.voice_client.channel} (I am lying to you)' if ctx.voice_client else None} \
+Currently playing: {ctx.voice_client.is_playing()}")
 
 
     @commands.command(aliases=["disconnect", "dc"])
@@ -100,7 +106,7 @@ class Audio(commands.Cog):
         """Stops and disconnects the bot from voice"""
 
         if ctx.voice_client:
-            await ctx.voice_client.disconnect()
+            return await ctx.voice_client.disconnect()
 
 
     @commands.command(aliases=["talk"])
@@ -117,13 +123,20 @@ class Audio(commands.Cog):
             tts.save('tts.mp3')
             async with ctx.typing():
                 player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
-                ctx.voice_client.play(player,
-                                      after=lambda e: print(f'Player error: {e}') if e else None)
+                await ctx.voice_client.play(player,
+                                            after=lambda e:
+                                            print(f'Player error: {e}') if e else None)
         except exceptions.HTTPError:
             # 503 Server Error from gTTS
             return await ctx.send("503 Server Error: Service likely unavailable for gTTS.")
         except AssertionError:
             return await ctx.send("No text to send to gTTS API")
+        except discord.errors.ClientException as ex:
+            return await ctx.send(f"{ex}\n\
+Current channel: \
+{f'{ctx.voice_client.channel} (I am lying to you)' if ctx.voice_client else None}\n\
+Currently playing: {ctx.voice_client.is_playing()}")
+
 
 
     @tts.before_invoke

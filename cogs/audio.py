@@ -80,6 +80,14 @@ class Audio(commands.Cog):
             await ctx.send(f"`{ex}`")
 
 
+    @commands.command(aliases=["disconnect", "dc"])
+    async def stop(self, ctx):
+        """Stops and disconnects the bot from voice"""
+
+        if ctx.voice_client:
+            return await ctx.voice_client.disconnect()
+
+
     @commands.command(aliases=["sing", "play"])
     async def stream(self, ctx, *, url: str =
                      commands.parameter(default="",
@@ -99,14 +107,9 @@ class Audio(commands.Cog):
                 return await ctx.send(f"{ex}\nCurrent channel: \
 {f'{ctx.voice_client.channel} (I am lying to you)' if ctx.voice_client else None} \
 Currently playing: {ctx.voice_client.is_playing()}")
-
-
-    @commands.command(aliases=["disconnect", "dc"])
-    async def stop(self, ctx):
-        """Stops and disconnects the bot from voice"""
-
-        if ctx.voice_client:
-            return await ctx.voice_client.disconnect()
+            finally:
+                if player:
+                    player.cleanup()
 
 
     @commands.command(aliases=["talk"])
@@ -136,6 +139,9 @@ Currently playing: {ctx.voice_client.is_playing()}")
 Current channel: \
 {f'{ctx.voice_client.channel} (I am lying to you)' if ctx.voice_client else None}\n\
 Currently playing: {ctx.voice_client.is_playing()}")
+        finally:
+            if player:
+                player.cleanup()
 
 
 

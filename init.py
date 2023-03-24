@@ -13,7 +13,7 @@ def get_file(location):
     if not os.path.exists(location):
         return None
     with open(location, "r", encoding="utf-8") as file:
-        if location[:4] == "json":
+        if location[-4:] == "json":
             result = json.load(file)
         else:
             result = file.read()

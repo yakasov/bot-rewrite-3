@@ -15,7 +15,6 @@ Initial fixes:
 Author - yakasov
 """
 
-from ctypes import util
 from datetime import date
 from time import gmtime, strftime
 import os

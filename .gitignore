@@ -5,6 +5,6 @@ __pycache__
 # Files
 cache
 resources/config.cfg
-discord.log
+*.log
 tts.mp3
 !run.bat

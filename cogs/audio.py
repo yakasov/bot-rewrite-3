@@ -100,7 +100,7 @@ class Audio(commands.Cog):
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
             try:
-                return await ctx.voice_client.play(player,
+                return ctx.voice_client.play(player,
                                                    after=lambda e:
                                                    print(f'Player error: {e}') if e else None)
             except discord.errors.ClientException as ex:
@@ -126,7 +126,7 @@ Currently playing: {ctx.voice_client.is_playing()}")
             tts.save('tts.mp3')
             async with ctx.typing():
                 player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('tts.mp3'))
-                await ctx.voice_client.play(player,
+                return ctx.voice_client.play(player,
                                             after=lambda e:
                                             print(f'Player error: {e}') if e else None)
         except exceptions.HTTPError:
